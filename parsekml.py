@@ -70,7 +70,6 @@ class Parse_kml:
         self.log('Downloading from gpsvisualizer')
 
         br = Browser()
-        br.set_proxies({"http": "wgraus:Asd456jkl2@proxy.indra.es:8080"})
         br.set_handle_robots(False)
         br.addheaders = [('User-agent', 'Firefox')]
         br.open(self.WEB_GPS)
