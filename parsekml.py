@@ -7,6 +7,11 @@ from xml.dom import minidom
 from mechanize import Browser
 from zipfile import ZipFile
 
+__author__ = "Wenceslau Graus"
+__copyright__ = "Copyright 2013-14"
+__license__ = "GPL"
+__version__ = "1.0"
+__email__ = "wgraus@gmail.com"
 
 class Parse_kml:
     ''' Kml Parser
