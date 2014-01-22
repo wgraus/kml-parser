@@ -21,7 +21,7 @@ class Parse_kml:
         self.abs_kml_file = self.get_abs_kml()
 
     def get_abs_kml(self):
-        r = "%s/%s.kml" % (self.folder, self.tag)
+        r = os.path.join(self.folder, '%s.kml' % self.tag)
         self.log('get: %s' % r)
         return r
 
@@ -111,7 +111,7 @@ class Parse_kml:
         ''' Replace original Kml
         '''
         self.log('Generate Kml')
-        doc = minidom.parse("%s/%s.kml" % (self.folder, self.tag))
+        doc = minidom.parse(os.path.join(self.folder, '%s.kml' % self.tag))
         node = doc.getElementsByTagName('coordinates')[0]
         self.replaceText(node, self.coord)
         self.log('Generate File')
@@ -126,6 +126,11 @@ class Parse_kml:
         self.get_coordinates()
         self.generate_kml()
 
-if __name__ == '__main__':
-    pk = Parse_kml()
+def main ():
+	''' main
+	'''
+	pk = Parse_kml()
     pk.run()
+
+if __name__ == '__main__':
+    main()
