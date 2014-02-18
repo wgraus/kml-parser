@@ -132,10 +132,17 @@ class Parse_kml:
         self.generate_kml()
 
 def main ():
+<<<<<<< HEAD
     ''' main
     '''
     pk = Parse_kml()
     pk.run()
+=======
+        ''' main
+        '''
+        pk = Parse_kml()
+        pk.run()
+>>>>>>> 35f9c298d527078856721259f6fc4eccdee99084
 
 if __name__ == '__main__':
     main()
