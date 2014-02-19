@@ -1,39 +1,48 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+'''
+reversekml.py is a simple script that rotates the coordinates of a route
+passing a kmz file from google-earth
+'''
+# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
 
-import sys
+import argparse
 import os
 import re
 from xml.dom import minidom
 from zipfile import ZipFile
 
-__author__ = "Wenceslau Graus"
-__copyright__ = "Copyright 2013-14"
-__license__ = "GPL"
-__version__ = "1.0"
-__email__ = "wgraus@gmail.com"
+__author__ = 'Wenceslau Graus'
+__copyright__ = '20014, Wenceslau Graus <wgraus at gmail.com>'
+__license__ = 'GPL v3'
+__version__ = '1.0'
+__email__ = 'wgraus@gmail.com'
+__docformat__ = 'restructuredtext en'
 
 
 class Parse_kml:
-    ''' Kml Parser
+    ''' KMZ reverse coordinates
     '''
     def __init__(self):
         ''' Get original Kml
         '''
+        self.args = self.load_args()
         self.abs_kmz_file = self.get_file()
         self.folder = self.get_folder(self.abs_kmz_file)
         self.kml_temp = 'temp.kml'
         self.kml_doc = 'doc.kml'
 
-    def get_abs_kml(self):
-        r = os.path.join(self.folder, '%s.kml' % self.tag)
-        self.log('get: %s' % r)
-        return r
+    def load_args(self):
+        parser = argparse.ArgumentParser(description="KMZ reverse coordinates")
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument("-v", "--verbose", action="store_true")
+        parser.add_argument("kmz_file", help="the .kmz file")
+        return parser.parse_args()
 
     def get_file(self):
         ''' Get abspath
         '''
-        r = os.path.abspath(sys.argv[1])
+        r = os.path.abspath(self.args.kmz_file)
         self.log('get: %s' % r)
         return r
 
@@ -45,7 +54,8 @@ class Parse_kml:
     def log(self, log):
         ''' Print log
         '''
-        print "%s ..." % log
+        if self.args.verbose:
+            print "%s ..." % log
 
     def extract(self):
         ''' Extract kml from kmz
@@ -109,6 +119,7 @@ class Parse_kml:
     def run(self):
         ''' Run process
         '''
+        self.load_args()
         self.extract()
         self.get_coordinates()
         self.reverse()
