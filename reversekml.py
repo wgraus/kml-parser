@@ -13,7 +13,7 @@ from xml.dom import minidom
 from zipfile import ZipFile
 
 __author__ = 'Wenceslau Graus'
-__copyright__ = '20014, Wenceslau Graus <wgraus at gmail.com>'
+__copyright__ = '2014, Wenceslau Graus <wgraus at gmail.com>'
 __license__ = 'GPL v3'
 __version__ = '1.0'
 __email__ = 'wgraus@gmail.com'
