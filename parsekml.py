@@ -1,17 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
+'''
+parsekml.py is a simple script that extracts the coordinates of a kmz file,
+add them elevation information and generates a kml file
+'''
+# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
+
+import argparse
 import os
 import re
 from xml.dom import minidom
 from mechanize import Browser
 from zipfile import ZipFile
 
-__author__ = "Wenceslau Graus"
-__copyright__ = "Copyright 2013-14"
-__license__ = "GPL"
-__version__ = "1.0"
-__email__ = "wgraus@gmail.com"
+__author__ = 'Wenceslau Graus'
+__copyright__ = '2014, Wenceslau Graus <wgraus at gmail.com>'
+__license__ = 'GPL v3'
+__version__ = '1.0'
+__email__ = 'wgraus@gmail.com'
+__docformat__ = 'restructuredtext en'
+
 
 class Parse_kml:
     ''' Kml Parser
@@ -19,11 +27,20 @@ class Parse_kml:
     def __init__(self):
         ''' Get original Kml
         '''
+        self.args = self.load_args()
         self.WEB_GPS = 'http://www.gpsvisualizer.com/map_input?form=googleearth'
         self.abs_kmz_file = self.get_file()
         self.folder = self.get_folder(self.abs_kmz_file)
         self.tag = self.get_tag()
         self.abs_kml_file = self.get_abs_kml()
+
+    def load_args(self):
+        parser = argparse.ArgumentParser(description="KMZ parse coordinates")
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument("-v", "--verbose", action="store_true")
+        parser.add_argument("kmz_file", help="the .kmz file")
+        parser.add_argument("kml_tag", help="the .kml tag file")
+        return parser.parse_args()
 
     def get_abs_kml(self):
         r = os.path.join(self.folder, '%s.kml' % self.tag)
@@ -33,7 +50,7 @@ class Parse_kml:
     def get_file(self):
         ''' Get abspath
         '''
-        r = os.path.abspath(sys.argv[1])
+        r = os.path.abspath(self.args.kmz_file)
         self.log('get: %s' % r)
         return r
 
@@ -45,14 +62,15 @@ class Parse_kml:
     def get_tag(self):
         ''' Get Tag
         '''
-        r = sys.argv[2]
+        r = self.args.kml_tag
         self.log('get: %s' % r)
         return r
 
     def log(self, log):
         ''' Print log
         '''
-        print "%s ..." % log
+        if self.args.verbose:
+            print "%s ..." % log
 
     def extract(self):
         ''' Extract kml from kmz
@@ -126,13 +144,14 @@ class Parse_kml:
     def run(self):
         ''' Run process
         '''
+        self.load_args()
         self.extract()
         self.download_kml()
         self.get_coordinates()
         self.generate_kml()
 
 
-def main ():
+def main():
     ''' main
     '''
     pk = Parse_kml()
