@@ -1,15 +1,12 @@
 KML Parser
 =====================
 
-
-a group of scripts to manipulate **KML**[^gfm] files, generate elevation data or reversed coordinates
-
-
+A group of scripts to manipulate **KML** files, generate elevation data or reversed coordinates
 
 ####reversekml.py
 
 > **USAGE:**
->usage: reversekml.py [-h] [-v] kmz_file[^gfme] 
+>usage: reversekml.py [-h] [-v] kmz_file
 >
 >KMZ reverse coordinates
 >
@@ -43,7 +40,3 @@ a group of scripts to manipulate **KML**[^gfm] files, generate elevation data or
 ```
 ./parsekml.py -v test.kmz tag
 ```
-
-[^gfm]: **Keyhole Markup Language** (KML) is an XML notation for expressing geographic annotation and visualization within Internet-based, two-dimensional maps and three-dimensional Earth browsers.
-
-[^gfme]: **KMZ** is Keyhole Markup Language files when compressed.
