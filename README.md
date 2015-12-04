@@ -27,12 +27,13 @@ A group of scripts to manipulate **KML** files, generate elevation data or rever
 
 > **USAGE:**
 >
->usage: reversekml.py [-h] [-v] kmz_file
+>usage: parsemaps.py [-h] [-v] kmz_file tag
 >
 >KMZ reverse coordinates
 >
 >positional arguments:
 >  kmz_file       the .kmz file
+>  tag            tag name
 >
 >optional arguments:
 >  -h, --help     show this help message and exit
