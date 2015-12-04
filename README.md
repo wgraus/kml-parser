@@ -23,7 +23,7 @@ A group of scripts to manipulate **KML** files, generate elevation data or rever
 ./reversekml.py -v test.kmz
 ```
 
-####parsekml.py
+####parsemaps.py
 
 > **USAGE:**
 >
@@ -40,5 +40,5 @@ A group of scripts to manipulate **KML** files, generate elevation data or rever
 
 #####Example:
 ```
-./parsekml.py -v test.kmz tag
+./parsemaps.py -v test.kmz tag
 ```
