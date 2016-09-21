@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-parsemaps.py is a simple script that extracts the coordinates of a kmz file,
-add them elevation information and generates a kml file
-'''
+"""
+parsemaps.py.
+
+Is a simple script that extracts the coordinates of a kmz file,
+add them elevation information and generates a kml file.
+"""
 # License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
 
 import argparse
@@ -23,12 +25,11 @@ __email__ = 'wgraus@gmail.com'
 __docformat__ = 'restructuredtext en'
 
 
-class Parse_kml:
-    ''' Kml Parser
-    '''
+class ParseKml:
+    """Kml Parser."""
+
     def __init__(self):
-        ''' Get original Kml
-        '''
+        """Get original Kml."""
         self.args = self.load_args()
         if self.args.verbose:
             logger.verbose = True
@@ -40,6 +41,7 @@ class Parse_kml:
         self.abs_kml_file = self.get_abs_kml()
 
     def load_args(self):
+        """Load args."""
         parser = argparse.ArgumentParser(description="KMZ parse coordinates")
         group = parser.add_mutually_exclusive_group()
         group.add_argument("-v", "--verbose", action="store_true")
@@ -53,8 +55,7 @@ class Parse_kml:
         return r
 
     def get_file(self):
-        ''' Get abspath
-        '''
+        """Get abspath."""
         r = os.path.abspath(self.args.kmz_file)
         logger('get: %s' % r)
         return r
@@ -65,24 +66,21 @@ class Parse_kml:
         return r
 
     def get_tag(self):
-        ''' Get Tag
-        '''
+        """Get Tag."""
         r = self.args.kml_tag
         logger('get: %s' % r)
         return r
 
     def chunks(self, l, n):
-        ''' Yield successive n-sized chunks from l.
-        '''
+        """Yield successive n-sized chunks from l."""
         for i in xrange(0, len(l), n):
-            yield l[i:i+n]
+            yield l[i:i + n]
 
     def get_elevation(self, url):
         return [x['elevation'] for x in self.get_json_dic(url)]
 
     def get_coord_with_elev(self, coords):
-        ''' Get coordinates with elevation info
-        '''
+        """Get coordinates with elevation info."""
         list_elevations = []
         llista_coords = coords.split()
         for tros in list(self.chunks(llista_coords, 25)):
@@ -99,52 +97,47 @@ class Parse_kml:
         return coords_elev
 
     def get_json_dic(self, url):
-        ''' Get dictionary from json
-        '''
+        """Get dictionary from json."""
         r = requests.get(url)
         return r.json()['results']
 
     def get_point_with_elev(self, c):
-        ''' Get coordinates with elevation info
-        '''
+        """Get coordinates with elevation info."""
         l = c.split(',')
         url = self.ELEVATION_API + '%s,%s' % (l[1], l[0])
         dic_coords = self.get_json_dic(url)
         return '%s,%s,%s\n' % (l[0], l[1], str(dic_coords[0]['elevation']))
 
     def extract(self):
-        ''' Extract kml from kmz
-        '''
+        """Extract kml from kmz."""
         logger('Extract kml from kmz')
         kmz = ZipFile(self.abs_kmz_file, 'r')
 
         kml = None
         for l in kmz.namelist():
-            siteMatch = re.compile('\.kml').search(l)
-            if siteMatch:
+            site_match = re.compile('\.kml').search(l)
+            if site_match:
                 kml = l
                 break
         kmz.extract(kml, self.folder)
         os.rename("%s/%s" % (self.folder, kml), self.abs_kml_file)
 
-    def replaceText(self, node, newText):
-        ''' Replace coordinates node
-        '''
+    def replace_text(self, node, new_text):
+        """Replace coordinates node."""
         if node.firstChild.nodeType != node.TEXT_NODE:
             raise Exception('node does not contain text')
-        node.firstChild.replaceWholeText(newText)
+        node.firstChild.replaceWholeText(new_text)
 
     def generate_kml(self):
-        ''' Replace original Kml
-        '''
+        """Replace original Kml."""
         logger('Generate Kml')
         doc = minidom.parse(os.path.join(self.folder, '%s.kml' % self.tag))
         for i in doc.getElementsByTagName('coordinates'):
             valor = i.firstChild.nodeValue
             if len(valor.split()) > 10:
-                self.replaceText(i, self.get_coord_with_elev(valor))
+                self.replace_text(i, self.get_coord_with_elev(valor))
             else:
-                self.replaceText(i, self.get_point_with_elev(valor))
+                self.replace_text(i, self.get_point_with_elev(valor))
         logger('Generate File')
         with open(self.abs_kml_file, 'w') as f:
             f.write(doc.toxml())
@@ -153,15 +146,13 @@ class Parse_kml:
         os.rename(s, t)
 
     def save_kmz(self):
-        ''' Save KMZ
-        '''
+        """Save KMZ."""
         s = self.abs_kmz_file
         t = os.path.join('/var/www/html/box/kmz/', os.path.basename(self.abs_kmz_file))
         os.rename(s, t)
 
     def run(self):
-        ''' Run process
-        '''
+        """Run process."""
         self.load_args()
         self.extract()
         self.generate_kml()
@@ -169,9 +160,8 @@ class Parse_kml:
 
 
 def main():
-    ''' main
-    '''
-    pk = Parse_kml()
+    """Main."""
+    pk = ParseKml()
     pk.run()
 
 
